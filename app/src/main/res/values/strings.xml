@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Pro Learn</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="histories">Riwayat</string>
+    <string name="change_password">Ganti Password</string>
+    <string name="about">Tentang Aplikasi</string>
+    <string name="achievement">Pencapaian</string>
+    <string name="navigation_drawer_open">Drawer Open</string>
+    <string name="navigation_drawer_close">Drawer Close</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">Login</string>
+    <string name="start">Mulai</string>
+    <string name="introduce">Pronouncation Learning</string>
+    <string name="let_start">Ayo mulai belajar</string>
+    <string name="login_to_save_your_progress">Login untuk menyimpan progres belajar</string>
+    <string name="or">OR</string>
+    <string name="image">gambar</string>
+    <string name="edit_profile">Ubah Profile</string>
+    <string name="logout">Logout</string>
+    <string name="age">Umur</string>
+    <string name="password">Password</string>
+    <string name="password_confirmation">Konfirmasi Password</string>
+    <string name="title">Judul</string>
+    <string name="level">Tingkat Kesulitan</string>
+    <string name="comming_soon">Segera Hadir</string>
+    <string name="status">Status</string>
+    <string name="something_wrong">Sepertinya Ada Kesalahan :(</string>
+</resources>
