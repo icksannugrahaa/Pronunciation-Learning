@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15" />
         <entry key="app/src/main/res/layout/activity_module.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.17028985507246377" />
@@ -17,6 +18,12 @@
         <entry key="app/src/main/res/layout/item_list_module_question.xml" value="0.2" />
         <entry key="app/src/main/res/layout/view_error.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/menu/navigation_drawer.xml" value="0.1734375" />
+        <entry key="core/src/main/res/drawable/ic_loading.xml" value="0.1" />
+        <entry key="core/src/main/res/drawable/ic_refresh_white.xml" value="0.1" />
+        <entry key="core/src/main/res/layout/image_dialog.xml" value="0.1" />
+        <entry key="core/src/main/res/layout/item_list_module.xml" value="0.22" />
+        <entry key="core/src/main/res/layout/item_list_module_lesson.xml" value="0.14375" />
+        <entry key="core/src/main/res/layout/wait_dialog.xml" value="0.1" />
       </map>
     </option>
   </component>

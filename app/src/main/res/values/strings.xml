@@ -29,4 +29,11 @@
     <string name="comming_soon">Segera Hadir</string>
     <string name="status">Status</string>
     <string name="something_wrong">Sepertinya Ada Kesalahan :(</string>
+    <string name="list_module">Daftar Modul</string>
+    <string name="login_first">Silahkan Login</string>
+    <string name="register">Daftar</string>
+    <string name="signin">Masuk</string>
+    <string name="are_you_sure">Apakah anda yakin ?</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
 </resources>

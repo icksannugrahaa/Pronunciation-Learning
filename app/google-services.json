@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "678842785392",
+    "project_id": "pro-learn-42572601",
+    "storage_bucket": "pro-learn-42572601.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678842785392:android:9009f93c3253ca11efdeb5",
+        "android_client_info": {
+          "package_name": "com.sh.prolearn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678842785392-6f3pikejeh8ofs2oj35i5cgafboj1h3t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sh.prolearn",
+            "certificate_hash": "00e989f8241ab79daa81b1595271685a1120ae4b"
+          }
+        },
+        {
+          "client_id": "678842785392-97deb6vc8mgvno7fffhv0t130ancvr03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOiXyaAtFICrqX_HV_xgMFL2MOlxWiRBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678842785392-97deb6vc8mgvno7fffhv0t130ancvr03.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
