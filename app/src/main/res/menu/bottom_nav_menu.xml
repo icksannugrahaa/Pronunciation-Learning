@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/btn_nav_score"
+        android:title="@string/tab_text_score"
+        android:icon="@drawable/ic_user_green"/>
+    <item
+        android:id="@+id/btn_nav_review"
+        android:title="@string/review_material"
+        android:icon="@drawable/ic_assignment_green"/>
+    <item
+        android:id="@+id/btn_nav_scoreboard"
+        android:title="@string/score_board"
+        android:icon="@drawable/ic_assignment_green"/>
+</menu>

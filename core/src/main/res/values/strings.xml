@@ -33,4 +33,16 @@
     <string name="are_you_sure">Apakah anda yakin ?</string>
     <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
+    <string name="review">User Review</string>
+    <string name="date">Tanggal</string>
+    <string name="leave_lesson_message">Akan keluar dari module ini</string>
+    <string name="getting_ready">Bersiap siap!</string>
+    <string name="time_is_up">Waktu sudah habis!</string>
+    <string name="wait_for_score">Sedang memproses</string>
+    <string name="position">Posisi</string>
+    <string name="score">Skor</string>
+    <string name="time_spent">Waktu dihabiskan</string>
+    <string name="quest">Soal</string>
+    <string name="theory">Materi</string>
+    <string name="answer">Jawaban</string>
 </resources>

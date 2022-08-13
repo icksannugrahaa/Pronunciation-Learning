@@ -25,6 +25,14 @@ class AccountRepository(
             }
         }.asFlow()
 
+    override fun registerAccount(email: String, name: String, password: String, cpassword: String): Flow<Resource<String>> =
+        object: NetworkOnlyResource<String, ResponseDefault>() {
+            override suspend fun createCall(): Flow<ApiResponse<ResponseDefault>> = remoteDataSource.registerAccount(email, name, password, cpassword)
+            override fun transformData(param: ResponseDefault): Flow<Resource<String>> = flow {
+                emit(Resource.Success(param.status ?: "success", param.message ?: MESSAGE_500))
+            }
+        }.asFlow()
+
     override fun logoutAccount(token: String): Flow<Resource<Boolean>> =
         object : NetworkOnlyResource<Boolean, ResponseDefault>() {
             override suspend fun createCall(): Flow<ApiResponse<ResponseDefault>> = remoteDataSource.logoutAccount(token)
@@ -37,7 +45,7 @@ class AccountRepository(
         object: NetworkOnlyResource<Account, ResponseAccount>() {
             override suspend fun createCall(): Flow<ApiResponse<ResponseAccount>> = remoteDataSource.accountGet(token)
             override fun transformData(param: ResponseAccount): Flow<Resource<Account>> = flow {
-                emit(Resource.Success(DataMapper.mapAccountResponsesToDomain(param.data, token), param.message ?: MESSAGE_500))
+                emit(Resource.Success(DataMapper.mapAccountResponsesToDomain(param.data, param.data?.token), param.message ?: MESSAGE_500))
             }
         }.asFlow()
 
@@ -57,12 +65,4 @@ class AccountRepository(
 //            }
 //        }.asFlow()
 //
-//    override fun uploadImage(path: String): Flow<Resource<Upload>> =
-//        object: NetworkOnlyResource<Upload, ResponseFileUpload>() {
-//            override suspend fun createCall(): Flow<ApiResponse<ResponseFileUpload>> = remoteDataSource.uploadFile(path, "users")
-//            override fun transformData(param: ResponseFileUpload): Flow<Resource<Upload>> = flow {
-//                emit(Resource.Success(DataMapperUtils.mapUploadResponsesToDomain(param), param.message ?: SERVER_ERR_EMPTY))
-//            }
-//        }.asFlow()
-
 }

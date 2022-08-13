@@ -22,6 +22,9 @@ data class AccountData(
     @field:SerializedName("level")
 	val level: Int? = null,
 
+    @field:SerializedName("levelName")
+    val levelName: String? = null,
+
     @field:SerializedName("biodata")
 	val biodata: String? = null,
 
@@ -37,9 +40,16 @@ data class AccountData(
     @field:SerializedName("exp")
 	val exp: Int? = null,
 
+    @field:SerializedName("expNext")
+    val expNext: Int? = null,
+
     @field:SerializedName("email")
 	val email: String? = null,
 
     @field:SerializedName("status")
-	val status: Boolean? = null
+	val status: Boolean? = null,
+
+    @field:SerializedName("token")
+    val token: String? = null
+
 ) : Parcelable

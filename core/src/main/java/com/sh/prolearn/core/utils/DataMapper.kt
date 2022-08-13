@@ -3,12 +3,21 @@ package com.sh.prolearn.core.utils
 import com.sh.prolearn.core.data.source.remote.response.auth.AccountData
 import com.sh.prolearn.core.data.source.remote.response.auth.AchievementItem
 import com.sh.prolearn.core.data.source.remote.response.auth.LevelItem
+import com.sh.prolearn.core.data.source.remote.response.file.ResponseUpload
 import com.sh.prolearn.core.data.source.remote.response.module.*
 import com.sh.prolearn.core.data.source.remote.response.module.Option
 import com.sh.prolearn.core.data.source.remote.response.module.Summary
+import com.sh.prolearn.core.data.source.remote.response.predict.PredictData
+import com.sh.prolearn.core.data.source.remote.response.predict.ResponsePredict
+import com.sh.prolearn.core.data.source.remote.response.predict.ResponseTTS
+import com.sh.prolearn.core.data.source.remote.response.progress.*
+import com.sh.prolearn.core.data.source.remote.response.progress.LastLearn
+import com.sh.prolearn.core.data.source.remote.response.progress.ProgressData
+import com.sh.prolearn.core.data.source.remote.response.progress.Scores
 import com.sh.prolearn.core.domain.model.*
 
 object DataMapper {
+    //    MODULE MAPPER
     fun mapModuleResponsesToDomain(input: List<ModuleData>?): List<Module> =
         input!!.map {
             Module(
@@ -24,7 +33,22 @@ object DataMapper {
                 order = it.order,
                 rating = it.rating,
                 required = it.required,
-                successful = it.successful
+                successful = it.successful,
+                image = it.image
+            )
+        }
+
+    fun mapScoreboardResponsesToDomain(input: List<ScoreBoardData>?): List<ScoreBoard> =
+        input!!.map {
+            ScoreBoard(
+                id = it.id,
+                name = it.name,
+                avatar = it.avatar,
+                score = it.score,
+                lesson = it.lesson,
+                time = it.time,
+                email = it.email,
+                createdAt = it.createdAt
             )
         }
 
@@ -34,16 +58,18 @@ object DataMapper {
     )
 
     private fun mapModuleCommentResponsesToDomain(input: List<CommentsItem?>?): List<Comment?>? =
-        input?.map{
+        input?.map {
             Comment(
                 name = it?.name,
                 rating = it?.rating,
-                comment = it?.comment
+                comment = it?.comment,
+                avatar = it?.avatar,
+                created_at = it?.created_at
             )
         }
 
     private fun mapModuleLessonResponsesToDomain(input: List<LessonsItem?>?): List<Lesson?>? =
-        input?.map{
+        input?.map {
             Lesson(
                 name = it?.name,
                 quiz = mapModuleQuizResponsesToDomain(it?.quiz),
@@ -60,7 +86,7 @@ object DataMapper {
         }
 
     private fun mapModuleQuizResponsesToDomain(input: List<QuizItem?>?): List<Quiz?>? =
-        input?.map{
+        input?.map {
             Quiz(
                 order = it?.order,
                 image = it?.image,
@@ -70,23 +96,25 @@ object DataMapper {
             )
         }
 
-    private fun mapModuleOptionResponsesToDomain(input: Option?) = com.sh.prolearn.core.domain.model.Option(
-        summary = input?.summary,
-        quiz = input?.quiz,
-        quizType = input?.quizType,
-        summaryType = input?.summaryType,
-        theoryType = input?.theoryType
-    )
+    private fun mapModuleOptionResponsesToDomain(input: Option?) =
+        com.sh.prolearn.core.domain.model.Option(
+            summary = input?.summary,
+            quiz = input?.quiz,
+            quizType = input?.quizType,
+            summaryType = input?.summaryType,
+            theoryType = input?.theoryType
+        )
 
-    private fun mapModuleSummaryResponsesToDomain(input: Summary?) = com.sh.prolearn.core.domain.model.Summary(
-        image = input?.image,
-        song = input?.song,
-        text = input?.text,
-        title = input?.title
-    )
+    private fun mapModuleSummaryResponsesToDomain(input: Summary?) =
+        com.sh.prolearn.core.domain.model.Summary(
+            image = input?.image,
+            song = input?.song,
+            text = input?.text,
+            title = input?.title
+        )
 
     private fun mapModuleTheoryResponsesToDomain(input: List<TheoryItem?>?): List<Theory?>? =
-        input?.map{
+        input?.map {
             Theory(
                 order = it?.order,
                 image = it?.image,
@@ -95,17 +123,20 @@ object DataMapper {
             )
         }
 
+    //    ACCOUNT MAPPER
     fun mapAccountResponsesToDomain(input: AccountData?, token: String?) = Account(
         id = input?.id,
         phoneNumber = input?.phoneNumber,
         gender = input?.gender,
         achievement = mapAchievementResponsesToDomain(input?.achievement),
         level = input?.level,
+        levelName = input?.levelName,
         biodata = input?.biodata,
         name = input?.name,
         googleSignIn = input?.googleSignIn,
         avatar = input?.avatar,
         exp = input?.exp,
+        expNext = input?.expNext,
         email = input?.email,
         status = input?.status,
         token = token
@@ -122,13 +153,93 @@ object DataMapper {
         }
 
     private fun mapAchievementLevelResponsesToDomain(input: List<LevelItem?>?): List<AchievementLevel?>? =
-        input?.map{
+        input?.map {
             AchievementLevel(
                 name = it?.name,
                 image = it?.image,
                 status = it?.status
             )
         }
+
+    //        MAPPER PROGRESS
+    fun mapProgressDataResponsesToDomain(input: ProgressData) =
+        com.sh.prolearn.core.domain.model.ProgressData(
+            lastLearn = mapLastLearnResponsesToDomain(input.lastLearn),
+            id = input.id,
+            email = input.email,
+            allProgress = mapAllProgressResponsesToDomain(input.allProgress)
+        )
+
+    private fun mapLastLearnResponsesToDomain(input: LastLearn?) =
+        com.sh.prolearn.core.domain.model.LastLearn(
+            lesson = input?.lesson,
+            status = input?.status
+        )
+
+    private fun mapAllProgressResponsesToDomain(input: List<AllProgressItem?>?): List<AllProgress>? =
+        input?.map {
+            AllProgress(
+                status = it?.status,
+                currentProgress = it?.currentProgress,
+                progress = mapProgressResponsesToDomain(it?.progress),
+                order = it?.order
+            )
+        }
+
+    private fun mapProgressResponsesToDomain(input: List<ProgressItem?>?): List<Progress>? =
+        input?.map {
+            Progress(
+                status = it?.status,
+                scores = mapScoreResponsesToDomain(it?.scores),
+                lesson = it?.lesson,
+                progress = it?.progress
+            )
+        }
+
+    private fun mapScoreResponsesToDomain(input: Scores?) =
+        com.sh.prolearn.core.domain.model.Scores(
+            score = input?.score,
+            time = input?.time,
+            answer = input?.answer,
+            quest = input?.quest
+        )
+
+    fun mapProgressStoreDataResponsesToDomain(input: ResponseProgressStore) =
+        ProgressStore(
+            levelUp = input.levelUp,
+            status = input.status
+        )
+
+    //    FILE MAPPER
+    fun mapUploadResponsesToDomain(param: ResponseUpload): Upload =
+        Upload(
+            download = param.download,
+            view = param.view,
+            status = param.status
+        )
+
+    //    PREDICT MAPPER
+    fun mapPredictResponsesToDomain(param: PredictData): Predict =
+        Predict(
+            download = param.download,
+            view = param.view,
+            wrong = param.wrong,
+            wrongScore = param.wrongScore,
+            textQuest = param.textQuest,
+            textPredict = param.textPredict,
+            finalText = param.finalText,
+            outWord = param.outWord,
+            outWordScore = param.outWordScore,
+            right = param.right,
+            rightScore = param.rightScore,
+            totalScore = param.totalScore
+        )
+
+    fun mapPredictTTSResponsesToDomain(param: ResponseTTS): TextToSpeech =
+        TextToSpeech(
+            view = param.view,
+            status = param.status
+        )
 //    fun mapDomainToEntity(input: Tourism) = TourismEntity(
 //        tourismId = input.tourismId,
 //        description = input.description,

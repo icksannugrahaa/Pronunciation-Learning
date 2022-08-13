@@ -11,7 +11,7 @@ data class QuizItem(
 	val image: String? = null,
 
 	@field:SerializedName("answer")
-	val answer: String? = null,
+	val answer: List<String>? = null,
 
 	@field:SerializedName("question")
 	val question: String? = null,

@@ -1,12 +1,19 @@
 package com.sh.prolearn.core.ui
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sh.prolearn.core.R
 import com.sh.prolearn.core.databinding.ItemListModuleLessonBinding
+import com.sh.prolearn.core.domain.model.Account
 import com.sh.prolearn.core.domain.model.Lesson
+import com.sh.prolearn.core.domain.model.Progress
+import com.sh.prolearn.core.domain.model.ProgressData
+import com.sh.prolearn.core.utils.Consts
+import com.sh.prolearn.core.utils.ToastUtils
+import java.io.Serializable
 
 class ModuleLessonAdapter : RecyclerView.Adapter<ModuleLessonAdapter.ItemViewHolder>() {
     private var listData = ArrayList<Lesson>()
@@ -33,7 +40,7 @@ class ModuleLessonAdapter : RecyclerView.Adapter<ModuleLessonAdapter.ItemViewHol
         fun bind(data: Lesson) {
             with(binding) {
                 tvQuestTitle.text = data.name
-                tvClassDate.text = data.exp.toString()
+                tvClassDate.text = "Exp ${data.exp}"
             }
         }
     }

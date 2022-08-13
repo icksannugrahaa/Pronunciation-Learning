@@ -13,6 +13,7 @@ data class Module(
     val required: Boolean? = null,
     val highscore: Int? = null,
     val name: String? = null,
+    val image: String? = null,
     val id: String? = null,
     val lessons: List<Lesson?>? = null,
     val order: Int? = null,

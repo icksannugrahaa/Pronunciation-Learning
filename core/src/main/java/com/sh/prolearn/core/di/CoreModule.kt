@@ -2,10 +2,14 @@ package com.sh.prolearn.core.di
 
 import com.sh.prolearn.core.data.repository.AccountRepository
 import com.sh.prolearn.core.data.repository.ModuleRepository
+import com.sh.prolearn.core.data.repository.PredictRepository
+import com.sh.prolearn.core.data.repository.UploadRepository
 import com.sh.prolearn.core.data.source.remote.RemoteDataSource
 import com.sh.prolearn.core.data.source.remote.network.ApiService
 import com.sh.prolearn.core.domain.repository.IAccountRepository
 import com.sh.prolearn.core.domain.repository.IModuleRepository
+import com.sh.prolearn.core.domain.repository.IPredictRepository
+import com.sh.prolearn.core.domain.repository.IUploadRepository
 import com.sh.prolearn.core.utils.Consts.BASE_API_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -54,6 +58,16 @@ object CoreModule {
         }
         single<IModuleRepository> {
             ModuleRepository(
+                get()
+            )
+        }
+        single<IUploadRepository> {
+            UploadRepository(
+                get()
+            )
+        }
+        single<IPredictRepository> {
+            PredictRepository(
                 get()
             )
         }

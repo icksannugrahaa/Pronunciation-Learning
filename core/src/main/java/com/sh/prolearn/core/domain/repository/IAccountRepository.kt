@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IAccountRepository {
     fun loginAccount(email: String, password: String): Flow<Resource<Account>>
+    fun registerAccount(email: String, name: String, password: String, cpassword: String): Flow<Resource<String>>
     fun logoutAccount(token: String): Flow<Resource<Boolean>>
     fun accountGet(token: String): Flow<Resource<Account>>
     fun expireLogin(token: String): Flow<Resource<Boolean>>

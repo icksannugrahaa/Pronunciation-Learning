@@ -1,18 +1,24 @@
 package com.sh.prolearn.app.authentication
 
+import android.content.Intent
+import android.os.Build.*
+import android.os.Build.VERSION.RELEASE
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
 import android.view.MenuItem
 import android.view.View
 import com.sh.prolearn.R
+import com.sh.prolearn.app.modules.ModuleActivity
 import com.sh.prolearn.core.data.Resource
+import com.sh.prolearn.core.data.preferences.AuthPreferences
 import com.sh.prolearn.core.utils.Consts.FIELD_EMAIL
 import com.sh.prolearn.core.utils.Consts.FIELD_REQUIRED
 import com.sh.prolearn.core.utils.Consts.LOGIN_ERR_ID
 import com.sh.prolearn.core.utils.Consts.LOGIN_ERR_PASS
-import com.sh.prolearn.core.utils.DialogUtils.setCustomDialog
-import com.sh.prolearn.core.utils.DialogUtils.showCustomDialog
+import com.sh.prolearn.core.utils.DialogUtils
+import com.sh.prolearn.core.utils.GeneralUtils.getIPAddress
+import com.sh.prolearn.core.utils.GeneralUtils.getTodayDateString
 import com.sh.prolearn.core.utils.ToastUtils.showToast
 import com.sh.prolearn.databinding.ActivityLoginBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,14 +26,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: AuthenticationViewModel by viewModel()
+    private lateinit var myDialog: DialogUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.appBarMain.toolbar)
+        myDialog = DialogUtils()
 
-        binding.loginBtn.setOnClickListener(this)
+        binding.btnLogin.setOnClickListener(this)
+        binding.btnRegister.setOnClickListener(this)
         if (savedInstanceState == null) {
             supportActionBar?.title = ""
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -46,8 +55,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.login_btn -> {
+            R.id.btn_login -> {
                 processLogin()
+            }
+            R.id.btn_register -> {
+                Intent(this, RegisterActivity::class.java).apply {
+                    startActivity(this)
+                }
             }
         }
     }
@@ -76,16 +90,32 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             when (data) {
                                 is Resource.Loading<*> -> {
-                                    setCustomDialog(this@LoginActivity, R.layout.wait_dialog, false)
-                                    showCustomDialog(true)
+                                    myDialog.setCustomDialog(this@LoginActivity, R.layout.wait_dialog, false)
+                                    myDialog.showCustomDialog(true)
                                 }
                                 is Resource.Success<*> -> {
                                     livedata.removeObservers(this@LoginActivity)
+                                    AuthPreferences(this@LoginActivity).saveAuthData(data.data)
+                                    AuthPreferences(this@LoginActivity).saveAuthDetail(getIPAddress(), getTodayDateString(), DEVICE, RELEASE, MODEL, PRODUCT)
                                     showToast(data.message.toString(), this@LoginActivity)
-                                    showCustomDialog(false)
+                                    myDialog.showCustomDialog(false)
+                                    finish()
                                 }
                                 is Resource.Error<*> -> {
-                                    showCustomDialog(false)
+                                    myDialog.showCustomDialog(false)
+                                    when(data.message) {
+                                        LOGIN_ERR_PASS -> {
+                                            loginPasswordLayout.error = data.message
+                                        }
+                                        LOGIN_ERR_ID -> {
+                                            loginNpmLayout.error = data.message
+                                        }
+                                    }
+                                    showToast(data.message.toString(), this@LoginActivity)
+                                    livedata.removeObservers(this@LoginActivity)
+                                }
+                                else -> {
+                                    myDialog.showCustomDialog(false)
                                     when(data.message) {
                                         LOGIN_ERR_PASS -> {
                                             loginPasswordLayout.error = data.message
