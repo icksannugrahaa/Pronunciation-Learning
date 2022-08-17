@@ -1,8 +1,8 @@
 package com.sh.prolearn.core.utils
 
+import com.sh.prolearn.core.data.source.remote.response.achievement.LevelItem
 import com.sh.prolearn.core.data.source.remote.response.auth.AccountData
 import com.sh.prolearn.core.data.source.remote.response.auth.AchievementItem
-import com.sh.prolearn.core.data.source.remote.response.auth.LevelItem
 import com.sh.prolearn.core.data.source.remote.response.file.ResponseUpload
 import com.sh.prolearn.core.data.source.remote.response.module.*
 import com.sh.prolearn.core.data.source.remote.response.module.Option
@@ -139,16 +139,18 @@ object DataMapper {
         expNext = input?.expNext,
         email = input?.email,
         status = input?.status,
-        token = token
+        token = token,
+        createdAt = input?.createdAt,
+        updatedAt = input?.updatedAt
     )
 
-    private fun mapAchievementResponsesToDomain(input: List<AchievementItem?>?): List<Achievement?>? =
+    fun mapAchievementResponsesToDomain(input: List<AchievementItem?>?): List<Achievement?>? =
         input?.map {
             Achievement(
+                id = it?.id,
                 name = it?.name,
                 image = it?.image,
-                level = mapAchievementLevelResponsesToDomain(it?.level),
-                description = it?.description
+                level = mapAchievementLevelResponsesToDomain(it?.level)
             )
         }
 
@@ -156,11 +158,23 @@ object DataMapper {
         input?.map {
             AchievementLevel(
                 name = it?.name,
-                image = it?.image,
-                status = it?.status
+                level = it?.level,
+                description = it?.description,
+                exp = it?.exp,
+                requirements = mapAchievementRequirementResponsesToDomain(it?.requirements)
             )
         }
 
+    private fun mapAchievementRequirementResponsesToDomain(input: com.sh.prolearn.core.data.source.remote.response.achievement.Requirements?) =
+        AchievementRequirement(
+            level = input?.level,
+            theory = input?.theory,
+            quizz = input?.quizz,
+            exp = input?.exp,
+            lesson = input?.lesson,
+            module = input?.module,
+            levelName = input?.levelName
+        )
     //        MAPPER PROGRESS
     fun mapProgressDataResponsesToDomain(input: ProgressData) =
         com.sh.prolearn.core.domain.model.ProgressData(
@@ -207,6 +221,8 @@ object DataMapper {
     fun mapProgressStoreDataResponsesToDomain(input: ResponseProgressStore) =
         ProgressStore(
             levelUp = input.levelUp,
+            newAchievement = input.newAchievement,
+            newAchievementMsg = input.newAchievementMsg,
             status = input.status
         )
 

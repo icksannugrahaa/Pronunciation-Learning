@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_refresh_white.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_lesson.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15" />
@@ -16,11 +17,17 @@
         <entry key="app/src/main/res/layout/content_main.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/layout/dialog_countdown.xml" value="0.1" />
         <entry key="app/src/main/res/layout/dialog_level_up.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/dialog_new_achievement.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/dialog_review.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/dropdown_select_item.xml" value="0.16168478260869565" />
+        <entry key="app/src/main/res/layout/fragment_about.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_achievement.xml" value="0.16168478260869565" />
+        <entry key="app/src/main/res/layout/fragment_change_password.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_learn_history.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/fragment_material.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_quest_text.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_quest_text_image.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_result.xml" value="0.16168478260869565" />
@@ -30,6 +37,7 @@
         <entry key="app/src/main/res/layout/fragment_summary_image_song.xml" value="0.15" />
         <entry key="app/src/main/res/layout/fragment_summary_text_image_song.xml" value="0.1" />
         <entry key="app/src/main/res/layout/header_navigation_drawer.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_list_achievement.xml" value="0.16" />
         <entry key="app/src/main/res/layout/item_list_module.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_list_module_placeholder.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/layout/item_list_module_question.xml" value="0.2" />
@@ -37,13 +45,18 @@
         <entry key="app/src/main/res/layout/shimer_modul_detail.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/shimer_result.xml" value="0.18" />
         <entry key="app/src/main/res/layout/shimer_scoreboard.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/shimmer_module.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/summary_text_image_song_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/view_error.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.33" />
         <entry key="app/src/main/res/menu/navigation_drawer.xml" value="0.1734375" />
         <entry key="core/src/main/res/drawable/ic_loading.xml" value="0.1" />
         <entry key="core/src/main/res/drawable/ic_refresh_white.xml" value="0.1" />
+        <entry key="core/src/main/res/layout/dialog_image.xml" value="0.1" />
+        <entry key="core/src/main/res/layout/dialog_level_up.xml" value="0.16168478260869565" />
+        <entry key="core/src/main/res/layout/dialog_new_achievement.xml" value="0.16168478260869565" />
         <entry key="core/src/main/res/layout/image_dialog.xml" value="0.1" />
+        <entry key="core/src/main/res/layout/item_list_achievement.xml" value="0.16168478260869565" />
         <entry key="core/src/main/res/layout/item_list_module.xml" value="0.22" />
         <entry key="core/src/main/res/layout/item_list_module_lesson.xml" value="0.14375" />
         <entry key="core/src/main/res/layout/item_list_module_lesson_detail.xml" value="0.25" />

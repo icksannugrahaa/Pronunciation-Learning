@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class AccountData(
 
-    @field:SerializedName("id")
+    @field:SerializedName("_id")
     val id: String? = null,
 
     @field:SerializedName("phoneNumber")
@@ -50,6 +50,12 @@ data class AccountData(
 	val status: Boolean? = null,
 
     @field:SerializedName("token")
-    val token: String? = null
+    val token: String? = null,
+
+    @field:SerializedName("createdAt")
+    val createdAt: String? = null,
+
+    @field:SerializedName("updatedAt")
+    val updatedAt: String? = null
 
 ) : Parcelable

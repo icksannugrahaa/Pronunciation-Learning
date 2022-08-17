@@ -45,4 +45,7 @@
     <string name="quest">Soal</string>
     <string name="theory">Materi</string>
     <string name="answer">Jawaban</string>
+    <string name="progress">Proses</string>
+    <string name="level_up">Naik Level!</string>
+    <string name="new_achievement">Pencapaian Baru!</string>
 </resources>

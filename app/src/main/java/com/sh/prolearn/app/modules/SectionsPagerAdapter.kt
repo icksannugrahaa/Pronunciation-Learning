@@ -12,6 +12,7 @@ import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_DATA
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_PROGRESS
 import com.sh.prolearn.core.utils.Consts.ARG_REVIEW_DATA
+import com.sh.prolearn.core.utils.Consts.ARG_REVIEW_STATUS
 import java.io.Serializable
 
 class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
@@ -19,13 +20,15 @@ class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(a
     private var lessonProgress = ArrayList<Progress>()
     private var reviewData = ArrayList<Comment>()
     private var lessonCode = "null"
+    private var canReview = false
 
-    fun setData(lesson: List<Lesson>, progress: List<Progress>, lessonCode: String, review: List<Comment>) {
+    fun setData(lesson: List<Lesson>, progress: List<Progress>, lessonCode: String, review: List<Comment>, reviewStatus: Boolean) {
         lessonData.clear()
         lessonData.addAll(lesson)
         lessonProgress.clear()
         lessonProgress.addAll(progress)
         this.lessonCode = lessonCode
+        canReview = reviewStatus
         reviewData.clear()
         reviewData.addAll(review)
     }
@@ -51,6 +54,7 @@ class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(a
                 fragment.arguments = Bundle().apply {
                     putSerializable(ARG_REVIEW_DATA, reviewData as Serializable)
                     putString(ARG_LESSON_CODE, lessonCode)
+                    putBoolean(ARG_REVIEW_STATUS, canReview)
                 }
             }
         }

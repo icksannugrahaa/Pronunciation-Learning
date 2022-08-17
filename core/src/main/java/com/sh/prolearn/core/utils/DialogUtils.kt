@@ -101,4 +101,18 @@ class DialogUtils {
             dialog.dismiss()
         }
     }
+
+    fun showLevelUpDialog(context: Context, isLevelUp: Boolean) {
+        if(isLevelUp) {
+            setCustomDialog(context, R.layout.dialog_level_up, isCancelAble = true)
+            showCustomDialog(true)
+        }
+    }
+
+    fun showNewAchievementDialog(context: Context, isNew: Boolean) {
+        if(isNew) {
+            setCustomDialog(context, R.layout.dialog_new_achievement, isCancelAble = true)
+            showCustomDialog(true)
+        }
+    }
 }

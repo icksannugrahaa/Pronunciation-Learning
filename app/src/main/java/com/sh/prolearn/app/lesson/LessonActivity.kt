@@ -23,6 +23,8 @@ import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_PROGRESS
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_TYPE
 import com.sh.prolearn.core.utils.Consts.ARG_LEVEL_UP
+import com.sh.prolearn.core.utils.Consts.ARG_NEW_ACHIEVEMENT
+import com.sh.prolearn.core.utils.Consts.ARG_NEW_ACHIEVEMENT_MSG
 import com.sh.prolearn.core.utils.Consts.ARG_QUIZ_DATA
 import com.sh.prolearn.core.utils.Consts.ARG_SUMMARY_DATA
 import com.sh.prolearn.core.utils.Consts.ARG_THEORY_DATA
@@ -84,7 +86,10 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
         savedInstanceState: Bundle?,
         lesson: Lesson,
         progress: Progress,
-        lessonCode: String
+        lessonCode: String,
+        isLevelUp: Boolean = false,
+        newBadge: Boolean = false,
+        newBadgeMsg: String = ""
     ) {
         val questTextFragment = QuestTextFragment() // 1
         val questTextImageFragment = QuestTextImageFragment() //2
@@ -127,10 +132,6 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                     }
                     "s" -> {
                         Intent(this, ResultActivity::class.java).apply {
-//                            this.putExtra(Consts.EXTRA_LESSON_DATA, it.lessons as Serializable)
-//                            this.putExtra(Consts.EXTRA_MODULE_DATA, it)
-//                            this.putExtra(ARG_LESSON_CODE, it.order.toString())
-//                            this.putExtra(Consts.EXTRA_MODULE_PROGRESS_DATA, progress.progress as Serializable)
                             startActivity(this)
                         }
                     }
@@ -230,7 +231,10 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                 progressTheory,
                 progressQuiz,
                 lesson.summary,
-                code
+                code,
+                isLevelUp,
+                newBadge,
+                newBadgeMsg
             )
             2 -> setCurrentFragment(
                 questTextImageFragment,
@@ -239,7 +243,10 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                 progressTheory,
                 progressQuiz,
                 lesson.summary,
-                code
+                code,
+                isLevelUp,
+                newBadge,
+                newBadgeMsg
             )
             3 -> setCurrentFragment(
                 summaryTextImageSongFragment,
@@ -248,7 +255,10 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                 progressTheory,
                 progressQuiz,
                 lesson.summary,
-                code
+                code,
+                isLevelUp,
+                newBadge,
+                newBadgeMsg
             )
         }
     }
@@ -260,7 +270,10 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
         theory: List<Theory?>?,
         quiz: List<Quiz?>?,
         summary: Summary?,
-        lessonCode: String
+        lessonCode: String,
+        isLevelUp: Boolean = false,
+        newBadge: Boolean = false,
+        newBadgeMsg: String = ""
     ) {
         currentSelectItemId = itemId
         val bundle = Bundle()
@@ -270,15 +283,24 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                 bundle.putSerializable(ARG_THEORY_DATA, theory as Serializable)
                 bundle.putSerializable(ARG_QUIZ_DATA, ArrayList<Quiz>() as Serializable)
                 bundle.putString(ARG_LESSON_CODE, lessonCode)
+                bundle.putBoolean(ARG_LEVEL_UP, isLevelUp)
+                bundle.putBoolean(ARG_NEW_ACHIEVEMENT, newBadge)
+                bundle.putString(ARG_NEW_ACHIEVEMENT_MSG, newBadgeMsg)
             }
             "q" -> {
                 bundle.putSerializable(ARG_THEORY_DATA, ArrayList<Theory>() as Serializable)
                 bundle.putSerializable(ARG_QUIZ_DATA, quiz as Serializable)
                 bundle.putString(ARG_LESSON_CODE, lessonCode)
+                bundle.putBoolean(ARG_LEVEL_UP, isLevelUp)
+                bundle.putBoolean(ARG_NEW_ACHIEVEMENT, newBadge)
+                bundle.putString(ARG_NEW_ACHIEVEMENT_MSG, newBadgeMsg)
             }
             "s" -> {
                 bundle.putParcelable(ARG_SUMMARY_DATA, summary)
                 bundle.putString(ARG_LESSON_CODE, lessonCode)
+                bundle.putBoolean(ARG_LEVEL_UP, isLevelUp)
+                bundle.putBoolean(ARG_NEW_ACHIEVEMENT, newBadge)
+                bundle.putString(ARG_NEW_ACHIEVEMENT_MSG, newBadgeMsg)
             }
         }
         fragment.arguments = bundle
@@ -336,6 +358,8 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                                 Log.d("TAG_HASIL_SUMMARY", progress.data.toString())
                                 Intent(this, ResultActivity::class.java).apply {
                                     putExtra(ARG_LEVEL_UP, progress.data?.levelUp)
+                                    putExtra(ARG_NEW_ACHIEVEMENT, progress.data?.newAchievement)
+                                    putExtra(ARG_NEW_ACHIEVEMENT_MSG, progress.data?.newAchievementMsg)
                                     this.putExtra(
                                         ARG_LESSON_CODE,
                                         currentProgress.lesson!!
@@ -344,7 +368,7 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                                 }
                                 finish()
                             } else {
-                                setUpProgress()
+                                setUpProgress(progress.data?.levelUp ?: false, progress.data?.newAchievement ?: false, progress.data?.newAchievementMsg ?: "")
                             }
                         }
                         is Resource.Error<*> -> {
@@ -370,7 +394,7 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun setUpProgress() {
+    private fun setUpProgress(isLevelUp: Boolean, newBadge: Boolean, newBadgeMsg: String) {
         val authData = AuthPreferences(this@LessonActivity).authData
         val authToken = AuthPreferences(this@LessonActivity).authToken
         val currentProgress = ProgressPreferences(this@LessonActivity).progressData
@@ -409,7 +433,10 @@ class LessonActivity : AppCompatActivity(), QuestTextImageFragment.LessonCallbac
                                             null,
                                             moduleData!!,
                                             myProgress,
-                                            currentProgress?.lesson!!
+                                            currentProgress?.lesson!!,
+                                            isLevelUp,
+                                            newBadge,
+                                            newBadgeMsg
                                         )
                                     }
                                 }

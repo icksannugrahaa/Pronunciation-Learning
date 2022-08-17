@@ -20,8 +20,11 @@ import com.sh.prolearn.core.domain.model.Comment
 import com.sh.prolearn.core.ui.ReviewListAdapter
 import com.sh.prolearn.core.utils.Consts
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
+import com.sh.prolearn.core.utils.Consts.ARG_REVIEW_DATA
+import com.sh.prolearn.core.utils.Consts.ARG_REVIEW_STATUS
 import com.sh.prolearn.core.utils.DialogUtils
 import com.sh.prolearn.core.utils.ToastUtils
+import com.sh.prolearn.core.utils.ToastUtils.showToast
 import com.sh.prolearn.databinding.FragmentCommentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -45,7 +48,7 @@ class CommentFragment : Fragment() {
         if (activity != null) {
             myDialog = DialogUtils()
             var authData = AuthPreferences(requireContext()).authData
-            val reviewData = arguments?.getSerializable(Consts.ARG_REVIEW_DATA) as List<Comment>
+            val reviewData = arguments?.getSerializable(ARG_REVIEW_DATA) as List<Comment>
             val reviewAdapter = ReviewListAdapter()
             reviewAdapter.setData(reviewData)
             with(binding.rvReview) {
@@ -54,10 +57,15 @@ class CommentFragment : Fragment() {
                 adapter = reviewAdapter
             }
             binding.fabAddReview.setOnClickListener {
-                val myReview = reviewData.filter {
-                    it.name == authData?.name
+                val canReview = arguments?.getBoolean(ARG_REVIEW_STATUS)
+                if(canReview == true) {
+                    val myReview = reviewData.filter {
+                        it.name == authData?.name
+                    }
+                    showReviewDialog(myReview)
+                } else {
+                    showToast(getString(R.string.please_complete_all_lesson), requireContext())
                 }
-                showReviewDialog(myReview)
             }
         }
     }

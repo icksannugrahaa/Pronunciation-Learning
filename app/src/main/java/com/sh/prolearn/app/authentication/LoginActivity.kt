@@ -12,7 +12,7 @@ import com.sh.prolearn.R
 import com.sh.prolearn.app.modules.ModuleActivity
 import com.sh.prolearn.core.data.Resource
 import com.sh.prolearn.core.data.preferences.AuthPreferences
-import com.sh.prolearn.core.utils.Consts.FIELD_EMAIL
+import com.sh.prolearn.core.utils.Consts.FIELD_EMAIL_NOT_VALID
 import com.sh.prolearn.core.utils.Consts.FIELD_REQUIRED
 import com.sh.prolearn.core.utils.Consts.LOGIN_ERR_ID
 import com.sh.prolearn.core.utils.Consts.LOGIN_ERR_PASS
@@ -72,9 +72,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 loginEmailEdit.text.toString().isEmpty() -> {
                     loginNpmLayout.error = FIELD_REQUIRED
                 }
-//                Patterns.EMAIL_ADDRESS.matcher(loginEmailEdit.text.toString()).matches() -> {
-//                    loginNpmLayout.error = FIELD_EMAIL
-//                }
+                !Patterns.EMAIL_ADDRESS.matcher(loginEmailEdit.text.toString()).matches() -> {
+                    loginNpmLayout.error = FIELD_EMAIL_NOT_VALID
+                }
                 loginPasswordEdit.text.toString().isEmpty() -> {
                     loginPasswordLayout.error = FIELD_REQUIRED
                 }

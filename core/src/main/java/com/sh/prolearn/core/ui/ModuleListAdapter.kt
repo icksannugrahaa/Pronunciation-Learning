@@ -55,16 +55,12 @@ class ModuleListAdapter : RecyclerView.Adapter<ModuleListAdapter.ItemViewHolder>
                 var moduleProgress = 0
                 var totalLesson = 0
                 var totalLessonDone = 0
+                for (lesson in data.lessons!!) totalLesson += (((lesson?.quiz?.size ?: 0) + lesson?.theory?.size!!)) + 1
                 if (accountData != null) {
-                    Log.d("TAG_CURT_POSITION", bindingAdapterPosition.toString())
-                    Log.d("TAG_CURT_POSITION", progressData?.allProgress?.size!!.toString())
                     if (bindingAdapterPosition < progressData?.allProgress?.size!!) {
-                        Log.d("TAG_CURT_LESSON", accountData.toString())
-                        Log.d("TAG_CURT_module", data.order.toString())
                         val currentLesson = progressData?.allProgress?.get(bindingAdapterPosition)
                         if (currentLesson?.order == data.order) {
                             for (lessonData in currentLesson?.progress!!) {
-                                totalLesson += 1
                                 if(lessonData?.status == "done") {
                                     totalLessonDone += 1
                                 }

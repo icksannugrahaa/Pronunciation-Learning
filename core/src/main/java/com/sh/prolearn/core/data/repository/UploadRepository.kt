@@ -11,13 +11,14 @@ import com.sh.prolearn.core.utils.Consts.MESSAGE_500
 import com.sh.prolearn.core.utils.DataMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.io.File
 
 class UploadRepository(
     private val remoteDataSource: RemoteDataSource
 ) : IUploadRepository {
-    override fun uploadFile(filePath: String, destinationPath: String): Flow<Resource<Upload>> =
+    override fun uploadFile(file: File, destinationPath: String): Flow<Resource<Upload>> =
         object: NetworkOnlyResource<Upload, ResponseUpload>() {
-            override suspend fun createCall(): Flow<ApiResponse<ResponseUpload>> = remoteDataSource.uploadFile(filePath, destinationPath)
+            override suspend fun createCall(): Flow<ApiResponse<ResponseUpload>> = remoteDataSource.uploadFile(file, destinationPath)
             override fun transformData(param: ResponseUpload): Flow<Resource<Upload>> = flow {
                 emit(Resource.Success(DataMapper.mapUploadResponsesToDomain(param), param.message ?: MESSAGE_500))
             }

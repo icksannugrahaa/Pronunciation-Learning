@@ -15,15 +15,12 @@ import com.sh.prolearn.core.data.Resource
 import com.sh.prolearn.core.data.preferences.AuthPreferences
 import com.sh.prolearn.core.data.preferences.ProgressPreferences
 import com.sh.prolearn.core.domain.model.Progress
-import com.sh.prolearn.core.domain.model.ProgressData
-import com.sh.prolearn.core.domain.model.ScoreBoard
 import com.sh.prolearn.core.ui.ResultReviewListAdapter
-import com.sh.prolearn.core.ui.ScoreBoardListAdapter
-import com.sh.prolearn.core.utils.Consts
+import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
+import com.sh.prolearn.core.utils.Consts.BASE_URL
 import com.sh.prolearn.core.utils.DialogUtils
 import com.sh.prolearn.core.utils.ToastUtils
 import com.sh.prolearn.databinding.FragmentResultReviewMaterialBinding
-import com.sh.prolearn.databinding.FragmentResultScoreBoardBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 
@@ -65,10 +62,11 @@ class ResultReviewMaterialFragment : Fragment() {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun getScoreBoard() {
         val authData = AuthPreferences(requireContext()).authData
         val authToken = AuthPreferences(requireContext()).authToken
-        val lessonCode = arguments?.getString(Consts.ARG_LESSON_CODE)
+        val lessonCode = arguments?.getString(ARG_LESSON_CODE)
 
         if (authData != null) {
             val scoreboardData = viewModel.progressIndex(authToken)
@@ -116,7 +114,7 @@ class ResultReviewMaterialFragment : Fragment() {
     }
 
     @Suppress("DEPRECATION")
-    private fun onPlayerClick(text: String, player: String, filename: String) {
+    private fun onPlayerClick(text: String, player: String, filename: String, isSummary: Boolean = false) {
         val progressPref = ProgressPreferences(requireContext())
         val authToken = AuthPreferences(requireContext()).authToken
         progressPref.savePlayerQuest("stop")
@@ -125,55 +123,63 @@ class ResultReviewMaterialFragment : Fragment() {
         try {
             if (mediaPlayer.isPlaying) mediaPlayer.stop()
             mediaPlayer = MediaPlayer()
-
-            if (player == "quest") {
-                progressPref.savePlayerQuest("playing")
-                progressPref.savePlayerAnswer("stop")
-                myDialog.setCustomDialog(requireContext(), R.layout.wait_dialog, false)
-                Log.d("TAG_FILENAME_REPLAY", filename)
-                val livedata =
-                    pViewModel.predictTTS(authToken, filename, text)
-                livedata.observe(viewLifecycleOwner) { data ->
-                    if (data != null) {
-                        when (data) {
-                            is Resource.Loading<*> -> {
-                                myDialog.showCustomDialog(true)
-                            }
-                            is Resource.Success<*> -> {
-                                livedata.removeObservers(viewLifecycleOwner)
-                                ToastUtils.showToast(
-                                    data.message.toString(),
-                                    requireContext()
-                                )
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                                mediaPlayer.setDataSource("${Consts.BASE_URL}/${data.data?.view}")
-                                mediaPlayer.prepare()
-                                mediaPlayer.start()
-                                myDialog.showCustomDialog(false)
-                            }
-                            is Resource.Error<*> -> {
-                                myDialog.showCustomDialog(false)
-                                var message = data.message.toString()
-                                if (message.contains("401", ignoreCase = true)) {
-                                    AuthPreferences(requireContext()).saveAuthData(null)
-                                    message = getString(R.string.logout_success)
-                                }
-                                ToastUtils.showToast(
-                                    message,
-                                    requireContext()
-                                )
-                                livedata.removeObservers(viewLifecycleOwner)
-                            }
-                        }
-                    }
-                }
-            } else if (player == "answer") {
+            if(isSummary) {
                 progressPref.savePlayerQuest("stop")
                 progressPref.savePlayerAnswer("playing")
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                mediaPlayer.setDataSource("${Consts.BASE_URL}/api/file/show?filename=$filename&path=/others")
+                mediaPlayer.setDataSource("${BASE_URL}/api/file/show?filename=$filename")
                 mediaPlayer.prepare()
                 mediaPlayer.start()
+            } else {
+                if (player == "quest") {
+                    progressPref.savePlayerQuest("playing")
+                    progressPref.savePlayerAnswer("stop")
+                    myDialog.setCustomDialog(requireContext(), R.layout.wait_dialog, false)
+                    Log.d("TAG_FILENAME_REPLAY", filename)
+                    val livedata =
+                        pViewModel.predictTTS(authToken, filename, text)
+                    livedata.observe(viewLifecycleOwner) { data ->
+                        if (data != null) {
+                            when (data) {
+                                is Resource.Loading<*> -> {
+                                    myDialog.showCustomDialog(true)
+                                }
+                                is Resource.Success<*> -> {
+                                    livedata.removeObservers(viewLifecycleOwner)
+                                    ToastUtils.showToast(
+                                        data.message.toString(),
+                                        requireContext()
+                                    )
+                                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                                    mediaPlayer.setDataSource("${BASE_URL}/${data.data?.view}")
+                                    mediaPlayer.prepare()
+                                    mediaPlayer.start()
+                                    myDialog.showCustomDialog(false)
+                                }
+                                is Resource.Error<*> -> {
+                                    myDialog.showCustomDialog(false)
+                                    var message = data.message.toString()
+                                    if (message.contains("401", ignoreCase = true)) {
+                                        AuthPreferences(requireContext()).saveAuthData(null)
+                                        message = getString(R.string.logout_success)
+                                    }
+                                    ToastUtils.showToast(
+                                        message,
+                                        requireContext()
+                                    )
+                                    livedata.removeObservers(viewLifecycleOwner)
+                                }
+                            }
+                        }
+                    }
+                } else if (player == "answer") {
+                    progressPref.savePlayerQuest("stop")
+                    progressPref.savePlayerAnswer("playing")
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                    mediaPlayer.setDataSource("${BASE_URL}/api/file/show?filename=$filename&path=/others")
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
+                }
             }
         } catch (e: IOException) {
             if (mediaPlayer.isPlaying) mediaPlayer.stop()
@@ -197,13 +203,19 @@ class ResultReviewMaterialFragment : Fragment() {
             val reviewAdapter = ResultReviewListAdapter()
             reviewAdapter.setData(progress)
             reviewAdapter.onIbPlayerQuestClick = { it, text ->
-                val filename = "${authData?.name?.split(' ')?.joinToString(separator = "_")}-${it.lesson}-${it.progress}-p.wav"
-                onPlayerClick(text, "quest", filename)
+                val filename = if(it.progress?.split("-")!![0] == "s")
+                    "song-lesson-${it.lesson}.mp3&path=/lessons/lesson-${it.lesson?.split("-")!![0]}/lesson-${it.lesson}/songs"
+                    else
+                    "${authData?.id}-${it.lesson}-${it.progress}-p.wav"
+                onPlayerClick(text, "quest", filename, it.progress?.split("-")!![0] == "s")
                 Log.d("TAG_REPLAY_QUEST", filename)
             }
             reviewAdapter.onIbPlayerAnswerClick = { it, text ->
-                val filename = "${authData?.name?.split(' ')?.joinToString(separator = "_")}-${it.lesson}-${it.progress}.wav"
-                onPlayerClick(text, "answer", filename)
+                val filename = if(it.progress?.split("-")!![0] == "s")
+                    "song-lesson-${it.lesson}.mp3&path=/lessons/lesson-${it.lesson?.split("-")!![0]}/lesson-${it.lesson}/songs"
+                else
+                    "${authData?.id}-${it.lesson}-${it.progress}.wav"
+                onPlayerClick(text, "answer", filename, it.progress?.split("-")!![0] == "s")
                 Log.d("TAG_REPLAY_ANSWER", filename)
             }
             with(rvScoreboard) {

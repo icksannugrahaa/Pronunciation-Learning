@@ -7,7 +7,8 @@ import com.sh.prolearn.core.domain.model.Upload
 import com.sh.prolearn.core.domain.repository.IModuleRepository
 import com.sh.prolearn.core.domain.repository.IUploadRepository
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 class UploadInteractor(private val uploadRepository: IUploadRepository) : UploadUseCase {
-    override fun uploadFile(filePath: String, destinationPath: String): Flow<Resource<Upload>> = uploadRepository.uploadFile(filePath, destinationPath)
+    override fun uploadFile(file: File, destinationPath: String): Flow<Resource<Upload>> = uploadRepository.uploadFile(file, destinationPath)
 }

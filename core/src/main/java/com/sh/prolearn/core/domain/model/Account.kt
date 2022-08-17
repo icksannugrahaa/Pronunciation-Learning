@@ -20,4 +20,6 @@ data class Account(
     val email: String? = null,
     val status: Boolean? = null,
     val token: String? = null,
+    val createdAt: String? = null,
+    val updatedAt: String? = null
 ) : Parcelable

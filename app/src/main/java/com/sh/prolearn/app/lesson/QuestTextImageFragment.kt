@@ -21,16 +21,16 @@ import com.sh.prolearn.core.data.Resource
 import com.sh.prolearn.core.data.preferences.AuthPreferences
 import com.sh.prolearn.core.data.preferences.ProgressPreferences
 import com.sh.prolearn.core.domain.model.*
+import com.sh.prolearn.core.utils.*
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_TYPE
+import com.sh.prolearn.core.utils.Consts.ARG_LEVEL_UP
+import com.sh.prolearn.core.utils.Consts.ARG_NEW_ACHIEVEMENT
 import com.sh.prolearn.core.utils.Consts.ARG_QUIZ_DATA
 import com.sh.prolearn.core.utils.Consts.ARG_THEORY_DATA
 import com.sh.prolearn.core.utils.Consts.BASE_URL
-import com.sh.prolearn.core.utils.DialogUtils
 import com.sh.prolearn.core.utils.ImageViewUtils.loadImageFromServer
-import com.sh.prolearn.core.utils.RecordUtils
-import com.sh.prolearn.core.utils.TimerUtils
-import com.sh.prolearn.core.utils.ToastUtils
+import com.sh.prolearn.core.utils.ToastUtils.showToast
 import com.sh.prolearn.databinding.DialogCountdownBinding
 import com.sh.prolearn.databinding.FragmentQuestTextImageBinding
 import kotlinx.coroutines.Job
@@ -72,12 +72,10 @@ class QuestTextImageFragment : Fragment(), View.OnClickListener {
         if (activity != null) {
             path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 StringBuilder().append(
-                    "${
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                    }"
+                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/Android"
                 ).toString()
             } else {
-                StringBuilder().append("${Environment.getExternalStorageDirectory()}")
+                StringBuilder().append("${Environment.getExternalStorageDirectory()}/Android")
                     .toString()
             }
 
@@ -87,6 +85,8 @@ class QuestTextImageFragment : Fragment(), View.OnClickListener {
             recorder = RecordUtils()
             timer = TimerUtils()
             myDialog = DialogUtils()
+            myDialog.showLevelUpDialog(requireContext(), arguments!!.getBoolean(ARG_LEVEL_UP, false))
+            myDialog.showNewAchievementDialog(requireContext(), arguments!!.getBoolean(ARG_NEW_ACHIEVEMENT, false))
 
             // get data
             val lessonType = arguments?.getString(ARG_LESSON_TYPE)!!
@@ -110,7 +110,7 @@ class QuestTextImageFragment : Fragment(), View.OnClickListener {
         progressPref.savePlayerAnswer("stop")
 
         // set record filename
-        val filename = "${authData?.name}-${lessonCode}.wav"
+        val filename = "${authData?.id}-${lessonCode}.wav"
         Log.d("TAG_FILENAME", filename)
         if (progressPref.currentRecordFilename == "null" || progressPref.currentRecordFilename != filename) {
             progressPref.saveRecordFilename(filename)
@@ -206,10 +206,13 @@ class QuestTextImageFragment : Fragment(), View.OnClickListener {
             } else if (player == "answer") {
                 progressPref.savePlayerQuest("stop")
                 progressPref.savePlayerAnswer("playing")
-
-                mediaPlayer.setDataSource("$path/${progressPref.currentRecordFilename}")
-                mediaPlayer.prepare()
-                mediaPlayer.start()
+                try {
+                    mediaPlayer.setDataSource("$path/${progressPref.currentRecordFilename}")
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
+                } catch(e: Exception) {
+                    showToast(getString(R.string.record_first), requireContext())
+                }
             }
         } catch (e: IOException) {
             if (mediaPlayer.isPlaying) mediaPlayer.stop()

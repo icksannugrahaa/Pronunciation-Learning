@@ -21,6 +21,8 @@ import com.sh.prolearn.core.domain.model.*
 import com.sh.prolearn.core.utils.Consts
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_TYPE
+import com.sh.prolearn.core.utils.Consts.ARG_LEVEL_UP
+import com.sh.prolearn.core.utils.Consts.ARG_NEW_ACHIEVEMENT
 import com.sh.prolearn.core.utils.Consts.ARG_QUIZ_DATA
 import com.sh.prolearn.core.utils.Consts.ARG_SUMMARY_DATA
 import com.sh.prolearn.core.utils.Consts.ARG_THEORY_DATA
@@ -39,6 +41,7 @@ class SummaryTextImageSongFragment : Fragment(){
     private val binding get() = _binding!!
     private lateinit var mediaPlayer: MediaPlayer
     private val mViewModel: ModuleViewModel by viewModel()
+    private lateinit var myDialog: DialogUtils
 
     private val scope = MainScope()
     var job: Job? = null
@@ -73,6 +76,9 @@ class SummaryTextImageSongFragment : Fragment(){
             val lessonType = arguments?.getString(ARG_LESSON_TYPE)!!
             val lessonCode = arguments?.getString(ARG_LESSON_CODE)!!
             val summaryData = arguments?.getParcelable<Summary>(ARG_SUMMARY_DATA)
+            myDialog = DialogUtils()
+            myDialog.showLevelUpDialog(requireContext(), arguments!!.getBoolean(ARG_LEVEL_UP, false))
+            myDialog.showNewAchievementDialog(requireContext(), arguments!!.getBoolean(ARG_NEW_ACHIEVEMENT, false))
 
             setData(summaryData!!)
 

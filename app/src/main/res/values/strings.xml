@@ -5,7 +5,7 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="histories">Riwayat</string>
-    <string name="change_password">Ganti Password</string>
+    <string name="change_password">Ubah Password</string>
     <string name="about">Tentang Aplikasi</string>
     <string name="achievement">Pencapaian</string>
     <string name="navigation_drawer_open">Drawer Open</string>
@@ -80,4 +80,31 @@
     <string name="submit">Kirim</string>
     <string name="add_review">Tambahkan Pendapat Mengenai Modul</string>
     <string name="change_review">Ubah</string>
+    <string name="please_complete_all_lesson">Tolong selesaikan semua pembelajaran terlebih dahulu</string>
+    <string name="phone">Nomor Telepon</string>
+    <string name="gender">Jenis Kelamin</string>
+    <string name="biodata">Biodata</string>
+    <string name="verify">Cek Kode</string>
+    <string name="code">Kode Verifikasi</string>
+    <string name="permission_granted">Permintaan %1$s Diizinkan!</string>
+    <string name="permission_denied">Permintaan %1$s Ditolak!</string>
+    <string name="send_code">Kirim Kode</string>
+    <string name="wait">tunggu...</string>
+    <string name="validation_email_empty">Isi kolom email</string>
+    <string name="please_fix_all_error">Terdapat error, tolong selesaikan terlebih dahulu!</string>
+    <string name="record_first">Lakukan Perekaman Terlebih Dahulu!</string>
+    <string name="current_password">Password saat ini</string>
+    <string name="new_password">Password baru</string>
+    <string name="edit_password">Ubah Password</string>
+    <string name="app_version">V 1.0.0</string>
+    <string name="version">Versi Aplikasi :</string>
+    <string name="name_of_app">Nama Aplikasi : </string>
+    <string name="find_me_on">Temukan Saya Di :</string>
+    <string name="learning_histories">Riwayat Pembelajaran</string>
+    <string name="progress">Proses</string>
+    <string name="new_achievement">Pencapaian Baru!</string>
+    <string-array name="genders">
+        <item>Laki-laki</item>
+        <item>Perempuan</item>
+    </string-array>
 </resources>

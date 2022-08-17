@@ -13,6 +13,7 @@ import com.sh.prolearn.core.data.preferences.AuthPreferences
 import com.sh.prolearn.core.domain.model.Progress
 import com.sh.prolearn.core.ui.ModuleListAdapter
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
+import com.sh.prolearn.core.utils.Consts.ARG_REVIEW_STATUS
 import com.sh.prolearn.core.utils.Consts.EXTRA_LESSON_DATA
 import com.sh.prolearn.core.utils.Consts.EXTRA_MODULE_DATA
 import com.sh.prolearn.core.utils.Consts.EXTRA_MODULE_PROGRESS_DATA
@@ -134,6 +135,7 @@ class ModuleActivity : AppCompatActivity() {
                                     this.putExtra(EXTRA_MODULE_DATA, it)
                                     this.putExtra(ARG_LESSON_CODE, it.order.toString())
                                     this.putExtra(EXTRA_MODULE_PROGRESS_DATA, progress.progress as Serializable)
+                                    this.putExtra(ARG_REVIEW_STATUS, progress.status == "done")
                                     startActivity(this)
                                 }
                             } else if(authData!!.level!! >= it.level!!) {

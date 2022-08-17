@@ -10,6 +10,12 @@ data class ResponseProgressStore(
 	@field:SerializedName("levelUp")
 	val levelUp: Boolean? = null,
 
+	@field:SerializedName("newAchievement")
+	val newAchievement: Boolean? = null,
+
+	@field:SerializedName("newAchievementMsg")
+	val newAchievementMsg: String? = null,
+
 	@field:SerializedName("message")
 	val message: String? = null,
 

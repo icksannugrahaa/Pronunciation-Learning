@@ -14,6 +14,7 @@ import com.sh.prolearn.core.data.preferences.AuthPreferences
 import com.sh.prolearn.core.utils.Consts
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
 import com.sh.prolearn.core.utils.Consts.ARG_LEVEL_UP
+import com.sh.prolearn.core.utils.Consts.ARG_NEW_ACHIEVEMENT
 import com.sh.prolearn.core.utils.Consts.SAVED_STATE_CURRENT_TAB_KEY
 import com.sh.prolearn.core.utils.DialogUtils
 import com.sh.prolearn.databinding.ActivityResultBinding
@@ -33,21 +34,11 @@ class ResultActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.appBarMain.toolbar)
         myDialog = DialogUtils()
-        showLevelUpDialog()
+        myDialog.showLevelUpDialog(this, intent.getBooleanExtra(ARG_LEVEL_UP, false))
+        myDialog.showNewAchievementDialog(this, intent.getBooleanExtra(ARG_NEW_ACHIEVEMENT, false))
         setFragmentView(savedInstanceState)
         supportActionBar?.title = getString(R.string.score_board)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun showLevelUpDialog() {
-        val isLevelUp = intent.getBooleanExtra(ARG_LEVEL_UP, false)
-        if(isLevelUp) {
-            myDialog.setCustomDialog(
-                this, R.layout.dialog_level_up,
-                isCancelAble = true
-            )
-            myDialog.showCustomDialog(true)
-        }
     }
 
     private fun setFragmentView(savedInstanceState: Bundle?) {

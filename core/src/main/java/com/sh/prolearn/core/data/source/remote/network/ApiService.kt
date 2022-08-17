@@ -1,6 +1,7 @@
 package com.sh.prolearn.core.data.source.remote.network
 
 import com.sh.prolearn.core.data.source.remote.response.account.ResponseAccount
+import com.sh.prolearn.core.data.source.remote.response.achievement.ResponseAchievement
 import com.sh.prolearn.core.data.source.remote.response.auth.ResponseAuth
 import com.sh.prolearn.core.data.source.remote.response.file.ResponseUpload
 import com.sh.prolearn.core.data.source.remote.response.general.ResponseDefault
@@ -11,11 +12,16 @@ import com.sh.prolearn.core.data.source.remote.response.predict.ResponsePredict
 import com.sh.prolearn.core.data.source.remote.response.predict.ResponseTTS
 import com.sh.prolearn.core.data.source.remote.response.progress.ResponseProgress
 import com.sh.prolearn.core.data.source.remote.response.progress.ResponseProgressStore
+import com.sh.prolearn.core.utils.Consts.ACCOUNT_CHANGE_PASSWORD_PATH
 import com.sh.prolearn.core.utils.Consts.ACCOUNT_PATH
+import com.sh.prolearn.core.utils.Consts.ACCOUNT_UPDATE_PATH
+import com.sh.prolearn.core.utils.Consts.ACCOUNT_VERIFY
+import com.sh.prolearn.core.utils.Consts.ACHIEVEMENT_PATH
 import com.sh.prolearn.core.utils.Consts.AUTH_LOGIN_EXPIRED
 import com.sh.prolearn.core.utils.Consts.AUTH_LOGIN_PATH
 import com.sh.prolearn.core.utils.Consts.AUTH_LOGOUT_PATH
 import com.sh.prolearn.core.utils.Consts.AUTH_REGISTER_PATH
+import com.sh.prolearn.core.utils.Consts.AUTH_SEND_CODE
 import com.sh.prolearn.core.utils.Consts.MODULES_DATA_PATH
 import com.sh.prolearn.core.utils.Consts.MODULES_STORE_REVIEW_PATH
 import com.sh.prolearn.core.utils.Consts.PREDICT_PATH
@@ -38,6 +44,10 @@ interface ApiService {
     ): ResponseAuth
 
     @FormUrlEncoded
+    @POST(AUTH_SEND_CODE)
+    suspend fun authSendCode(@Header("Authorization") token: String, @Field("email") email: String?): ResponseDefault
+
+    @FormUrlEncoded
     @POST(AUTH_REGISTER_PATH)
     suspend fun authRegister(
         @Field("email") email: String,
@@ -54,18 +64,32 @@ interface ApiService {
 
     //    ACCOUNT
     @FormUrlEncoded
-    @POST(ACCOUNT_PATH)
-    suspend fun accountUpdate(
-        @Field("token") token: String,
-        @Field("name") name: String,
-        @Field("password") password: String,
+    @POST(ACCOUNT_UPDATE_PATH)
+    suspend fun updateAccount(
+        @Header("Authorization") token: String,
         @Field("email") email: String,
+        @Field("name") name: String,
         @Field("phoneNumber") phoneNumber: String,
-        @Field("avatarUrl") avatar: String,
-        @Field("platNomor") plat: String,
-        @Field("wifiPackageStatus") wfps: Boolean,
-        @Field("parkingPackageStatus") pkps: Boolean
-    ): ResponseAccount
+        @Field("gender") gender: String,
+        @Field("biodata") biodata: String,
+        @Field("avatar") avatar: String,
+        @Field("currentPassword") currentPassword: String
+    ): ResponseAuth
+
+    @FormUrlEncoded
+    @POST(ACCOUNT_CHANGE_PASSWORD_PATH)
+    suspend fun changePasswordAccount(
+        @Header("Authorization") token: String,
+        @Field("currentPassword") currentPassword: String,
+        @Field("newPassword") newPassword: String,
+        @Field("cPassword") cPassword: String
+    ): ResponseDefault
+
+
+    @GET(ACCOUNT_VERIFY)
+    suspend fun accountVerify(
+        @Query("code") code: String
+    ): ResponseDefault
 
     @POST(ACCOUNT_PATH)
     suspend fun accountMe(@Header("Authorization") token: String): ResponseAccount
@@ -99,6 +123,9 @@ interface ApiService {
     //    PROGRESS
     @POST(PROGRESS_DATA_PATH)
     suspend fun progressIndex(@Header("Authorization") token: String): ResponseProgress
+
+    @POST(ACHIEVEMENT_PATH)
+    suspend fun achievementIndex(@Header("Authorization") token: String): ResponseAchievement
 
     @FormUrlEncoded
     @POST(PROGRESS_STORE_PATH)

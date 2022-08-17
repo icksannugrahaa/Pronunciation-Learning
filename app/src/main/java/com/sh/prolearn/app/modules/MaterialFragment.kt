@@ -55,11 +55,7 @@ class MaterialFragment : Fragment() {
                     if(progressData.isNotEmpty()) {
                         for (index in progressData.indices) {
                             val item = progressData[index]
-                            Log.d("TAG_PROGRESSES1", item.lesson.toString())
-                            Log.d("TAG_PROGRESSES2", "$lessonCode-${lesson.order}")
                             if (item.lesson == "$lessonCode-${lesson.order}") {
-                                Log.d("TAG_PROGRESSES_STATUS", item.status.toString())
-                                Log.d("TAG_PROGRESSES_TYPE_STATUS", item.progress!!.split("-")[0])
                                 if (item.status == "new" || item.status == "in_progress") {
                                     Intent(requireContext(), LessonActivity::class.java).apply {
                                         this.putExtra(EXTRA_QUESTION_DATA, lesson)

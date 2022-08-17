@@ -4,14 +4,19 @@ object Consts {
     //API
 //    const val BASE_URL = "http://10.0.2.2:5000" // for local device
 //    const val BASE_API_URL = "http://10.0.2.2:5000/api/"
-    const val BASE_URL = "http://192.168.100.164:5000" // for local network
-    const val BASE_API_URL = "http://192.168.100.164:5000/api/"
+    const val BASE_URL = "http://192.168.100.200:5000" // for local network
+    const val BASE_API_URL = "http://192.168.100.200:5000/api/"
     const val AUTH_LOGIN_PATH = "auth/login"
     const val AUTH_REGISTER_PATH = "auth/register"
     const val AUTH_LOGOUT_PATH = "auth/logout"
     const val AUTH_LOGIN_EXPIRED = "auth/expire"
+    const val AUTH_SEND_CODE = "auth/send-code"
     const val ACCOUNT_PATH = "auth/me"
+    const val ACCOUNT_UPDATE_PATH = "account/update-account"
+    const val ACCOUNT_CHANGE_PASSWORD_PATH = "account/change-password"
+    const val ACCOUNT_VERIFY = "account/verify" //?code={code}&key={key}
     const val UPLOAD_PATH = "file/upload"
+    const val ACHIEVEMENT_PATH = "achievement/data"
     const val PREDICT_PATH = "predict/get"
     const val TTS_PATH = "predict/tts"
     const val MODULES_DATA_PATH = "modules/data"
@@ -35,11 +40,18 @@ object Consts {
     const val ARG_SUMMARY_DATA = "summary_data"
     const val ARG_LESSON_PROGRESS = "lesson_progress"
     const val ARG_LEVEL_UP = "level_up"
+    const val ARG_NEW_ACHIEVEMENT = "new_achievement"
+    const val ARG_NEW_ACHIEVEMENT_MSG = "new_achievement_msg"
     const val ARG_REVIEW_DATA = "review_data"
     const val ARG_OPTION_DATA = "option_data"
     const val ARG_LESSON_TYPE = "type_data"
     const val ARG_LESSON_CODE = "code_lesson_data"
+    const val ARG_REVIEW_STATUS = "review_status"
     const val SAVED_STATE_CURRENT_TAB_KEY = "state_current_tab_key"
+
+    // PERMISSION CODE
+    const val CAMERA_PERMISSION_CODE = 100
+    const val STORAGE_PERMISSION_CODE = 101
 
     //SHARED PREFERENCE
     const val SHARED_PREFS_LOGIN = "pref_login"
@@ -86,5 +98,5 @@ object Consts {
     //FIELD MESSAGE
     const val FIELD_REQUIRED = "Field tidak boleh kosong"
     const val FIELD_PASSOWRD_MUST_SAME = "Field password dan konfirmasi harus sama"
-    const val FIELD_EMAIL = "Field Email tidak valid"
+    const val FIELD_EMAIL_NOT_VALID = "Field Email tidak valid"
 }

@@ -3,6 +3,7 @@ package com.sh.prolearn.core.data.source.remote
 import com.sh.prolearn.core.data.source.remote.network.ApiResponse
 import com.sh.prolearn.core.data.source.remote.network.ApiService
 import com.sh.prolearn.core.data.source.remote.response.account.ResponseAccount
+import com.sh.prolearn.core.data.source.remote.response.achievement.ResponseAchievement
 import com.sh.prolearn.core.data.source.remote.response.auth.ResponseAuth
 import com.sh.prolearn.core.data.source.remote.response.file.ResponseUpload
 import com.sh.prolearn.core.data.source.remote.response.general.ResponseDefault
@@ -13,6 +14,7 @@ import com.sh.prolearn.core.data.source.remote.response.predict.ResponsePredict
 import com.sh.prolearn.core.data.source.remote.response.predict.ResponseTTS
 import com.sh.prolearn.core.data.source.remote.response.progress.ResponseProgress
 import com.sh.prolearn.core.data.source.remote.response.progress.ResponseProgressStore
+import com.sh.prolearn.core.domain.model.Account
 import com.sh.prolearn.core.utils.Consts.MESSAGE_500
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +57,32 @@ class RemoteDataSource(private val apiService: ApiService) {
             }
         }.flowOn(Dispatchers.IO)
 
+    suspend fun sendCodeAccount(token: String, email: String?): Flow<ApiResponse<ResponseDefault>> = flow {
+        try {
+            val response = apiService.authSendCode(token, email)
+            if (response.status == "success") {
+                emit(ApiResponse.Success(response))
+            } else {
+                emit(ApiResponse.Error(response.message ?: MESSAGE_500))
+            }
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    suspend fun changePasswordAccount(token: String, currentPassword: String, newPassword: String, cPassword: String): Flow<ApiResponse<ResponseDefault>> = flow {
+        try {
+            val response = apiService.changePasswordAccount(token, currentPassword, newPassword, cPassword)
+            if (response.status == "success") {
+                emit(ApiResponse.Success(response))
+            } else {
+                emit(ApiResponse.Error(response.message ?: MESSAGE_500))
+            }
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
+
     suspend fun logoutAccount(token: String): Flow<ApiResponse<ResponseDefault>> = flow {
         try {
             val response = apiService.authLogout(token)
@@ -82,29 +110,41 @@ class RemoteDataSource(private val apiService: ApiService) {
     }.flowOn(Dispatchers.IO)
 
 //    ACCOUNT RDS
-//    suspend fun accountUpdate(token: String, account: Account): Flow<ApiResponse<ResponseAccount>> =
-//        flow {
-//            try {
-//                val response = apiService.accountUpdate(
-//                    token,
-//                    account.name ?: "",
-//                    account.password ?: "",
-//                    account.email ?: "",
-//                    account.phoneNumber ?: "",
-//                    account.avatarUrl ?: "",
-//                    account.platNomor ?: "",
-//                    account.wifiPackageStatus ?: false,
-//                    account.parkingPackageStatus ?: false
-//                )
-//                if (!response.results.id.isNullOrEmpty()) {
-//                    emit(ApiResponse.Success(response))
-//                } else {
-//                    emit(ApiResponse.Error(response.message ?: SERVER_ERR_EMPTY))
-//                }
-//            } catch (e: Exception) {
-//                emit(ApiResponse.Error(e.toString()))
-//            }
-//        }.flowOn(Dispatchers.IO)
+    suspend fun updateAccount(token: String, account: Account, currentPassword: String): Flow<ApiResponse<ResponseAuth>> =
+        flow {
+            try {
+                val response = apiService.updateAccount(
+                    token,
+                    account.email ?: "",
+                    account.name ?: "",
+                    account.phoneNumber ?: "",
+                    account.gender ?: "",
+                    account.biodata ?: "",
+                    account.avatar ?: "",
+                    currentPassword
+                )
+                if (response.status == "success") {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Error(response.message ?: MESSAGE_500))
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Error(e.toString()))
+            }
+        }.flowOn(Dispatchers.IO)
+
+    suspend fun verifyAccount(code: String): Flow<ApiResponse<ResponseDefault>> = flow {
+        try {
+            val response = apiService.accountVerify(code)
+            if (response.status == "success") {
+                emit(ApiResponse.Success(response))
+            } else {
+                emit(ApiResponse.Error(response.message ?: MESSAGE_500))
+            }
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun accountGet(token: String): Flow<ApiResponse<ResponseAccount>> = flow {
         try {
@@ -176,6 +216,19 @@ class RemoteDataSource(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
+    suspend fun achievementIndex(token: String): Flow<ApiResponse<ResponseAchievement>> = flow {
+        try {
+            val response = apiService.achievementIndex(token)
+            if (response.status == "success") {
+                emit(ApiResponse.Success(response))
+            } else {
+                emit(ApiResponse.Error(response.message ?: MESSAGE_500))
+            }
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
+
     suspend fun progressStore(
         token: String,
         time: Int,
@@ -200,12 +253,11 @@ class RemoteDataSource(private val apiService: ApiService) {
 
     //    UPLOAD RDS
     suspend fun uploadFile(
-        filePath: String,
+        file: File,
         destinationPath: String
     ): Flow<ApiResponse<ResponseUpload>> =
         flow {
             try {
-                val file = File(filePath)
                 val fileBody: MultipartBody.Part = MultipartBody.Part.createFormData(
                     "file",
                     file.name.toString(),

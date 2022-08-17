@@ -9,12 +9,18 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.sh.prolearn.R
+import com.sh.prolearn.app.about.AboutFragment
 import com.sh.prolearn.app.authentication.AuthenticationViewModel
 import com.sh.prolearn.app.home.HomeFragment
+import com.sh.prolearn.app.progress.AchievementFragment
+import com.sh.prolearn.app.progress.LearnHistoryFragment
+import com.sh.prolearn.app.user.ChangePasswordFragment
+import com.sh.prolearn.app.user.ProfileFragment
 import com.sh.prolearn.core.data.Resource
 import com.sh.prolearn.core.data.preferences.AuthPreferences
 import com.sh.prolearn.core.domain.model.Account
@@ -25,7 +31,7 @@ import com.sh.prolearn.core.utils.ImageViewUtils.loadImageFromServer
 import com.sh.prolearn.databinding.ActivityMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HomeFragment.AuthenticationCallback  {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HomeFragment.AuthenticationCallback, ProfileFragment.AuthenticationCallback  {
     companion object {
         const val SAVED_STATE_CURRENT_TAB_KEY = "CurrentTabKey"
     }
@@ -33,6 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var binding: ActivityMainBinding
     private val viewModel: AuthenticationViewModel by viewModel()
     private lateinit var myDialog: DialogUtils
+    private var currentTab = "home"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +67,55 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        TODO("Not yet implemented")
+        var fragment: Fragment? = null
+        var title = getString(R.string.app_name)
+        when (item.itemId) {
+            R.id.nav_drawer_home -> {
+                currentTab = "home"
+                fragment = HomeFragment()
+                title = getString(R.string.app_name)
+            }
+            R.id.nav_drawer_profile -> {
+                currentTab = "profile"
+                fragment = ProfileFragment()
+                title = getString(R.string.edit_profile)
+            }
+            R.id.nav_drawer_change_password -> {
+                currentTab = "password"
+                fragment = ChangePasswordFragment()
+                title = getString(R.string.change_password)
+            }
+            R.id.nav_drawer_about -> {
+                currentTab = "about"
+                fragment = AboutFragment()
+                title = getString(R.string.about)
+            }
+            R.id.nav_drawer_histories -> {
+                currentTab = "histories"
+                fragment = LearnHistoryFragment()
+                title = getString(R.string.learning_histories)
+            }
+            R.id.nav_drawer_achievement -> {
+                currentTab = "achievement"
+                fragment = AchievementFragment()
+                title = getString(R.string.achievement)
+            }
+        }
+        if (fragment != null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, fragment)
+                .commit()
+        }
+        supportActionBar?.title = title
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 
     override fun onResume() {
         super.onResume()
-        checkAuthentication()
+        if(currentTab != "profile") {
+            checkAuthentication()
+        }
     }
 
     override fun authCallback(account: Account?) {
@@ -83,7 +133,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val menu = binding.navView.menu
         val header = binding.navView.getHeaderView(0)
 
-        if (data != null) {
+        if (data?.token != null) {
             header.isVisible = true
             header.findViewById<ProgressBar>(R.id.nav_drawer_pb_level).progress = ((data.exp!!.toDouble() / data.expNext!!.toDouble())*100).toInt()
             header.findViewById<TextView>(R.id.nav_drawer_tv_username).text = data.name

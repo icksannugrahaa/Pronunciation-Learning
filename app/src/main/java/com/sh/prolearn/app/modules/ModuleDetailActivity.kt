@@ -18,6 +18,7 @@ import com.sh.prolearn.core.domain.model.*
 import com.sh.prolearn.core.ui.LessonListAdapter
 import com.sh.prolearn.core.utils.Consts
 import com.sh.prolearn.core.utils.Consts.ARG_LESSON_CODE
+import com.sh.prolearn.core.utils.Consts.ARG_REVIEW_STATUS
 import com.sh.prolearn.core.utils.Consts.EXTRA_LESSON_DATA
 import com.sh.prolearn.core.utils.Consts.EXTRA_MODULE_DATA
 import com.sh.prolearn.core.utils.Consts.EXTRA_MODULE_PROGRESS_DATA
@@ -222,8 +223,9 @@ class ModuleDetailActivity : AppCompatActivity() {
         reviewData: List<Comment>,
         lessonCode: String
     ) {
+        val canReview = intent.getBooleanExtra(ARG_REVIEW_STATUS, false)
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
-        sectionsPagerAdapter.setData(lessonData, progressData, lessonCode, reviewData)
+        sectionsPagerAdapter.setData(lessonData, progressData, lessonCode, reviewData, canReview)
         val viewPager: ViewPager2 = binding.viewPager
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = binding.tabs
